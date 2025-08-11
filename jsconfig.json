@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "baseUrl": "./server", 
+      "paths": {
+        "controllers/*": ["controllers/*"],
+        "routes/*": ["routes/*"],
+        "services/*": ["services/*"]
+      }
+    }
+  }
