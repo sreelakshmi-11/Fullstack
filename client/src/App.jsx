@@ -14,9 +14,10 @@ import StudentsEnrolled from "./pages/educator/StudentsEnrolled";
 import Navbar from "./components/student/Navbar";
 import { useLocation } from "react-router-dom";
 import "quill/dist/quill.snow.css";
+
 function App() {
   const location = useLocation();
-  const isEducatorRoute = location.pathname.includes("/educator");
+  const isEducatorRoute = location.pathname.includes("/educator/*");
   return (
     <div className="w-screen min-h-screen bg-white">
       {!isEducatorRoute && <Navbar />}
