@@ -1,9 +1,8 @@
 import { Webhook } from "svix";
 import User from "../models/User.js";
 
-//API controller function to manage Clerk user with database
-
 export const clerkWebhooks = async (req, res) => {
+  console.log("Webhook received with body:", req.body);
   try {
     const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
     await whook.verify(JSON.stringify(req.body), {
@@ -12,13 +11,15 @@ export const clerkWebhooks = async (req, res) => {
       "svix-signature": req.headers["svix-signature"],
     });
     const { data, type } = req.body;
+    console.log("Webhook data:", data);
+
     switch (type) {
       case "user.created": {
         const userData = {
           _id: data.id,
-          email: data.email_addresses?.[0]?.email_address ?? "",
+          email: data.email_addresses[0].email_address,
           name: data.first_name + " " + data.last_name,
-          imageUrl: data.imageUrl,
+          imageUrl: data.image_url,
         };
         await User.create(userData);
         res.json({});
@@ -28,7 +29,7 @@ export const clerkWebhooks = async (req, res) => {
         const userData = {
           email: data.email_addresses[0].email_address,
           name: data.first_name + " " + data.last_name,
-          imageUrl: data.imageUrl,
+          imageUrl: data.image_url,
         };
         await User.findByIdAndUpdate(data.id, userData);
         res.json({});
@@ -43,9 +44,10 @@ export const clerkWebhooks = async (req, res) => {
         break;
     }
   } catch (err) {
+    console.error("Webhook verification failed:", err);
     res.json({
       success: "false",
-      message: err.message,
+      message: err.message || "unable to add user",
     });
   }
 };
