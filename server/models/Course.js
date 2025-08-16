@@ -16,7 +16,7 @@ const chapterSchema = new mongoose.Schema(
     chapterId: { type: String, required: true },
     chapterOrder: { type: Number, required: true },
     chapterTitle: { type: String, required: true },
-    chapterContent: { lectureSchema },
+    chapterContent: [lectureSchema],
   },
   { _id: false }
 );
@@ -32,12 +32,12 @@ const courseSchema = new mongoose.Schema(
     courseRatings: [
       { userId: { type: String }, rating: { type: Number, min: 1, max: 5 } },
     ],
-    educator: { type: String, ref: "User", required: true },
-    enrolledStudents: [{ type: String, ref: "User" }],
+    educator: { type: String, required: true },
+    enrolledStudents: [{ type: String }],
   },
   {
     timestamps: true,
-    minimise: false,
+    minimize: false,
   }
 );
 const Course = mongoose.model("course", courseSchema);
